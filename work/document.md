@@ -38,8 +38,16 @@ wsock = accept(rsock, (struct sockaddr *)&client, &len);
 write(wsock, "HTTP1.1 200 OK", 14);
 ```
 
-# 実際に通信してみる
+# コンパイル、httpサーバ起動
 ```c
 # gcc main.c
 # ./a.out
 ```
+
+# 動作確認
+## ブラウザでアクセス
+ブラウザで`http://<server-ip>:8010`にアクセスしhttpサーバにリクエストを送る。
+
+## 開発者ツールでレスポンスを確認
+Chromeの場合
+![devtools_chrome](https://github.com/mitty1293/img/blob/main/httpserver/devtools_chrome.png)
