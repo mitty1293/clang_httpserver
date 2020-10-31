@@ -49,6 +49,8 @@ write(wsock, "HTTP1.1 200 OK", 14);
 ブラウザで`http://<server-ip>:8010`にアクセスしhttpサーバにリクエストを送る。
 
 ## 開発者ツールでレスポンスを確認
-Chromeの場合
-
+### Chromeの場合
 ![devtools_chrome](https://github.com/mitty1293/img/blob/main/httpserver/devtools_chrome.png)
+
+### Firefoxの場合
+![devtools_firfox](https://github.com/mitty1293/img/blob/main/httpserver/devtools_firefox.png)
