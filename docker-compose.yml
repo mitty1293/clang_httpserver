@@ -4,3 +4,6 @@ services:
         image: http_server_c
         container_name: http_server_c
         build: .
+        volumes: 
+            - ./work:/home/work
+        tty: true
