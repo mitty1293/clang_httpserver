@@ -50,4 +50,5 @@ write(wsock, "HTTP1.1 200 OK", 14);
 
 ## 開発者ツールでレスポンスを確認
 Chromeの場合
+
 ![devtools_chrome](https://github.com/mitty1293/img/blob/main/httpserver/devtools_chrome.png)
