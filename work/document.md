@@ -7,7 +7,17 @@ int rsock
 rsock = socket(AF_INET, SOCK_STREAM, 0);
 ```
 ### `socket(int domain, int type, int protocol)`
-* OSにソケットの作成を依頼するシステムコール。
+OSにソケットの作成を依頼するシステムコール。
+- domain :
+    - 通信を行なうドメインを指定する。どのprotocol familyを通信に使用するかを指定する。これらのファミリーは <sys/socket.h> に定義されている。
+    - AF_INET
+        - IPv4 インターネットプロトコル
+- type :
+    - 通信方式を指定する。
+    - SOCK_STREAM
+        - 順序性と信頼性があり、双方向の、接続されたbyte streamを提供する。
+- protocol :
+    - ソケットによって使用される固有のプロトコルを指定する。通常それぞれの ソケットは、与えられたプロトコルファミリーの種類ごとに一つのプロトコルのみをサポートする。その場合は protocol に 0 を指定できる。
 
 ## 2. ソケットにアドレスを割り当てる
 作成したソケットにアドレスを割り当てる。「ソケットに名前を付ける」とイメージすると良い。
@@ -23,6 +33,8 @@ addr.sin_addr.s_addr = INADDR_ANY;
 /* binding socket */    
 bind(rsock, (struct sockaddr *)&addr, sizeof(addr));
 ```
+### `struct sockaddr_in addr`
+
 
 ## 3. 接続を待ち受ける
 bindしたソケットに対してlistenで接続を待つ。第2引数は接続待ちキューの最大長だが、適当に5を指定。
