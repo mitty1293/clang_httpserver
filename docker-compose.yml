@@ -1,0 +1,6 @@
+version: "3"
+services: 
+    http_server_c:
+        image: http_server_c
+        container_name: http_server_c
+        build: .
