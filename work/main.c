@@ -13,7 +13,7 @@ int main(void){
     rsock = socket(AF_INET, SOCK_STREAM, 0);
 
     /* socket setting */
-    addr.sin_fimily = AF_INET;
+    addr.sin_family = AF_INET;
     addr.sin_port = htons(8080);
     addr.sin_addr.s_addr = INADDR_ANY;
 
