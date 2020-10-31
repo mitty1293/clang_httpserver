@@ -4,6 +4,8 @@ services:
         image: http_server_c
         container_name: http_server_c
         build: .
+        ports:
+            - "8010:8080"
         volumes: 
             - ./work:/home/work
         tty: true
