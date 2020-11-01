@@ -35,14 +35,30 @@ addr.sin_addr.s_addr = INADDR_ANY;
 bind(rsock, (struct sockaddr *)&addr, sizeof(addr));
 ```
 ### `struct sockaddr_in`
-ソケットプログラミングで使われる構造体。`/usr/include/netinet/in.h`に定義されている。
-```c:in.h
+ソケットプログラミングで使われる構造体。`/usr/include/netinet/in.h`に以下のように定義されている。
+```c
 struct sockaddr_in {
         sa_family_t sin_family;
         in_port_t sin_port;
         struct in_addr sin_addr;
         uint8_t sin_zero[8];
 };
+```
+- sin_family:
+- sin_port:
+    - ポート番号。
+- sin_addr:
+    - IPアドレス。
+
+また、`struct in_addr`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
+in_addr構造体は、in_addr_t型のs_addrしかメンバに持たない構造体である。
+```c
+struct in_addr { in_addr_t s_addr; };
+```
+また、`in_addr_t`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
+32bitの整数のIPアドレスを格納するだけなので、ただのuint32_tである。
+```c
+typedef uint32_t in_addr_t;
 ```
 ## 3. 接続を待ち受ける
 bindしたソケットに対してlistenで接続を待つ。第2引数は接続待ちキューの最大長だが、適当に5を指定。
