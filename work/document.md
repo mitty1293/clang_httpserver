@@ -9,7 +9,7 @@ rsock = socket(AF_INET, SOCK_STREAM, 0);
 ### `socket(int domain, int type, int protocol)`
 OSにソケットの作成を依頼するシステムコール。
 - domain :
-    - 通信を行なうドメインを指定する。どのprotocol familyを通信に使用するかを指定する。これらのファミリーは <sys/socket.h> に定義されている。
+    - 通信を行なうドメインを指定する。どのAddress family(protocol familyと同義と考えて良い)を通信に使用するかを指定する。
     - AF_INET
         - IPv4 インターネットプロトコル
 - type :
@@ -17,7 +17,14 @@ OSにソケットの作成を依頼するシステムコール。
     - SOCK_STREAM
         - 順序性と信頼性があり、双方向の、接続されたbyte streamを提供する。
 - protocol :
-    - ソケットによって使用される固有のプロトコルを指定する。通常それぞれの ソケットは、与えられたプロトコルファミリーの種類ごとに一つのプロトコルのみをサポートする。その場合は protocol に 0 を指定できる。
+    - ソケットによって使用される固有のプロトコルを指定する。通常それぞれのソケットは、与えられたAddress familyの種類ごとに一つのプロトコルのみをサポートする。その場合は protocol に 0 を指定できる。
+### Address family
+目的の通信をするために必要な通信プロトコルをひとまとめにしたもの
+Address familyを指定することで、システムに与えられたアドレスをどのように解釈するかを指示する。これらのファミリーは <sys/socket.h> に定義されている。
+- AF_INET
+    - AF_INETを指定した場合、ローカルプロセスとリモートホスト上で動作するプロセス間のソケット通信を提供する。IPv4 インターネットプロトコルを示す。
+- AF_UNIX
+    - AF_UNIXを指定した場合、同じ OS 上で動作するプロセス間のソケット通信を提供する。
 
 ## 2. ソケットにアドレスを割り当てる
 作成したソケットにアドレスを割り当てる。「ソケットに名前を付ける」とイメージすると良い。
@@ -45,10 +52,13 @@ struct sockaddr_in {
 };
 ```
 - sin_family:
+    - Address familyを指定する。
+    - AF_INET
+        - IPv4 インターネットプロトコル
 - sin_port:
-    - ポート番号。
+    - ポート番号をnetwork byte orderで指定する。
 - sin_addr:
-    - IPアドレス。
+    - IPアドレスを指定する。
 
 また、`struct in_addr`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
 in_addr構造体は、in_addr_t型のs_addrしかメンバに持たない構造体である。
