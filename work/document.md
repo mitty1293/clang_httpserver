@@ -6,8 +6,9 @@
 int rsock
 rsock = socket(AF_INET, SOCK_STREAM, 0);
 ```
-### `socket(int domain, int type, int protocol)`
+### `int socket(int domain, int type, int protocol)`
 OSにソケットの作成を依頼するシステムコール。
+各ソケットの識別子となるファイルディスクリプターを返す。
 - domain :
     - 通信を行なうドメインを指定する。どのAddress family(protocol familyと同義と考えて良い)を通信に使用するかを指定する。
     - AF_INET
@@ -57,19 +58,54 @@ struct sockaddr_in {
         - IPv4 インターネットプロトコル
 - sin_port:
     - ポート番号をnetwork byte orderで指定する。
+    - network byte order
+        - ネットワークを通じて伝送する際に、各バイトをどのような順番で記録・伝送するかを定めた順序。TCP/IPでは。TCP/IPでは慣習的に最上位から下位バイトに向けて順に記述するbig endianが用いられる。network byte orderと対比して、各コンピュータ固有のバイト順のことを「host byte order」と呼ぶ。
 - sin_addr:
     - IPアドレスを指定する。
+    - `struct in_addr`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
+        in_addr構造体は、in_addr_t型のs_addrしかメンバに持たない構造体である。
+        ```c
+        struct in_addr { in_addr_t s_addr; };
+        ```
+    - `in_addr_t`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
+        32bitの整数のIPアドレスを格納するだけなので、ただのuint32_tである。
+        ```c
+        typedef uint32_t in_addr_t;
+        ```
+### `uint16_t htons(uint16_t)`
+`/usr/include/netinet/in.h`に定義されている。<br>
+16bit符号なし整数をhost byte orderで受取り、network byte orderで返す。<br>
+host byte orderのIPポート番号をnetwork byte orderのIPポート番号に変換することができる。
+### `INADDR_ANY`
+`/usr/include/netinet/in.h`に以下のように定義されている。<br>
+```c
+#define INADDR_ANY        ((in_addr_t) 0x00000000)
+```
+Cで、IPの処理に用いられるマクロの一つ。バインドに用いる任意のアドレスを持つ。<br>
+一般には0.0.0.0が定義され、全てのローカルインターフェイスにバインドされうることを意味する。<br>
+例えばサーバープログラムを作る場合、どのアドレスからの接続でも受け入れるように待ち受ける(ことが多い)、つまり接続を受けるネットワークインターフェイスがどれでもいいので、bind()の引数にINADDR_ANYが指定される。
+### `int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)`
+ソケットに名前をつける。<br>
+`socket`でソケットが作成されたとき、そのソケットは名前空間 (Address family) に存在するが、アドレスは割り当てられていない。<br>
+`bind()`は、ファイルディスクリプター`sockfd`で参照されるソケットに`addr`で指定されたアドレスを割り当てる。`addrlen`には`addr`が指す構造体のサイズをバイト単位で指定する。<br>
+成功した場合はゼロ、エラー時には-1を返す。
+- sockfd:
+    - 任意のソケットを示すファイルディスクリプタ。<br>
+    socket()でソケット作成時に返されるファイルディスクリプタ。
+- addr:
+    - ソケットに割り当てるアドレス。
+    - `struct sockaddr`は`/usr/include/sys/socket.h`に以下のように定義されている。<br>
+        ```c
+        struct sockaddr {             
+            sa_family_t sa_family;
+            char sa_data[14];
+        };
+        ```
+- addrlen:
+    - addrの指す構造体のサイズ。
+    - sizeof()
+        - メモリサイズを返す。
 
-また、`struct in_addr`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
-in_addr構造体は、in_addr_t型のs_addrしかメンバに持たない構造体である。
-```c
-struct in_addr { in_addr_t s_addr; };
-```
-また、`in_addr_t`は`/usr/include/netinet/in.h`に以下のように定義されている。<br>
-32bitの整数のIPアドレスを格納するだけなので、ただのuint32_tである。
-```c
-typedef uint32_t in_addr_t;
-```
 ## 3. 接続を待ち受ける
 bindしたソケットに対してlistenで接続を待つ。第2引数は接続待ちキューの最大長だが、適当に5を指定。
 ```c
