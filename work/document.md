@@ -23,6 +23,7 @@ OSにソケットの作成を依頼するシステムコール。
 作成したソケットにアドレスを割り当てる。「ソケットに名前を付ける」とイメージすると良い。
 割り当てる具体的な情報は、sockaddr_in構造体に定義。今回はIPv4で8080番ポートを指定。アドレスは特に指定しないのでINADDR_ANY。
 ```c
+/* 構造体sockaddr_in型の変数addrを定義 */
 struct sockaddr_in addr;
  
 /* socket setting */
@@ -33,9 +34,16 @@ addr.sin_addr.s_addr = INADDR_ANY;
 /* binding socket */    
 bind(rsock, (struct sockaddr *)&addr, sizeof(addr));
 ```
-### `struct sockaddr_in addr`
-
-
+### `struct sockaddr_in`
+ソケットプログラミングで使われる構造体。`/usr/include/netinet/in.h`に定義されている。
+```c:in.h
+struct sockaddr_in {
+        sa_family_t sin_family;
+        in_port_t sin_port;
+        struct in_addr sin_addr;
+        uint8_t sin_zero[8];
+};
+```
 ## 3. 接続を待ち受ける
 bindしたソケットに対してlistenで接続を待つ。第2引数は接続待ちキューの最大長だが、適当に5を指定。
 ```c
