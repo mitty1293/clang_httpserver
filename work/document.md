@@ -95,6 +95,9 @@ Cで、IPの処理に用いられるマクロの一つ。バインドに用い�
 - addr:
     - ソケットに割り当てるアドレス。
     - `struct sockaddr`は`/usr/include/sys/socket.h`に以下のように定義されている。<br>
+    addr に渡される構造体へのポインターをキャストし、 コンパイラの警告メッセージを抑えるためだけに存在する。<br>
+    （&addrで変数addrのアドレスを参照する）<br>
+    参考：https://teratail.com/questions/210977
         ```c
         struct sockaddr {             
             sa_family_t sa_family;
