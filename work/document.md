@@ -84,28 +84,28 @@ host byte orderのIPポート番号をnetwork byte orderのIPポート番号に�
 Cで、IPの処理に用いられるマクロの一つ。バインドに用いる任意のアドレスを持つ。<br>
 一般には0.0.0.0が定義され、全てのローカルインターフェイスにバインドされうることを意味する。<br>
 例えばサーバープログラムを作る場合、どのアドレスからの接続でも受け入れるように待ち受ける(ことが多い)、つまり接続を受けるネットワークインターフェイスがどれでもいいので、bind()の引数にINADDR_ANYが指定される。
-### `int bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)`
+### `int bind(int sockfd, const struct sockaddr *address, socklen_t address_len)`
 ソケットに名前をつける。<br>
 `socket`でソケットが作成されたとき、そのソケットは名前空間 (Address family) に存在するが、アドレスは割り当てられていない。<br>
-`bind()`は、ファイルディスクリプター`sockfd`で参照されるソケットに`addr`で指定されたアドレスを割り当てる。`addrlen`には`addr`が指す構造体のサイズをバイト単位で指定する。<br>
+`bind()`は、ファイルディスクリプター`sockfd`で参照されるソケットに`address`で指定されたアドレスを割り当てる。`address_len`には`address`が指す構造体のサイズをバイト単位で指定する。<br>
 成功した場合はゼロ、エラー時には-1を返す。
 - sockfd:
     - 任意のソケットを示すファイルディスクリプタ。<br>
     socket()でソケット作成時に返されるファイルディスクリプタ。
-- addr:
-    - ソケットに割り当てるアドレス。
+- address:
+    - ソケットに割り当てるアドレス。sockaddr構造体を差すポインタ。
     - `struct sockaddr`は`/usr/include/sys/socket.h`に以下のように定義されている。<br>
-    addr に渡される構造体へのポインターをキャストし、 コンパイラの警告メッセージを抑えるためだけに存在する。<br>
-    &でsockaddr_in構造体のアドレスを参照し、sockaddr構造体のポインタへキャストしている<br>
-    参考：https://teratail.com/questions/210977
         ```c
         struct sockaddr {             
             sa_family_t sa_family;
             char sa_data[14];
         };
         ```
-- addrlen:
-    - addrの指す構造体のサイズ。
+        sockaddr構造体は、`address` に渡される構造体へのポインターをキャストし、 コンパイラの警告メッセージを抑えるためだけに存在する。<br>
+    - &でsockaddr_in構造体のアドレスを参照し、sockaddr構造体のポインタへキャストしている<br>
+    - 参考：https://teratail.com/questions/210977
+- address_len:
+    - addressの指す構造体のサイズ。
     - sizeof()
         - メモリサイズを返す。
 
@@ -114,6 +114,14 @@ bindしたソケットに対してlistenで接続を待つ。第2引数は接続
 ```c
 listen(rsock, 5);
 ```
+### `int listen(int sockfd, int backlog)`
+解説
+`sockfd` が参照するソケットを接続待ちソケットそして印をつける。接続待ちソケットとは、`accept()`を使って到着した接続要求を受け付けるのに使用されるソケットである。<br>
+接続要求を受け付ける意思と接続要求を入れるキュー長を指定する。
+- sockfd:
+    -  SOCK_STREAM 型か SOCK_SEQPACKET 型のソケットを参照するファイルディスクリプター
+- backlog:
+    - `sockfd` についての保留中の接続キューの最大長を指定する。キューがいっぱいの状態で接続要求が到着すると、クライアントは `ECONNREFUSED` エラーを受け取る。
 
 ## 4. 接続を受け付ける
 接続要求に対してacceptで受け付ける。acceptの戻り値として接続済みのソケットが返ってくる。
