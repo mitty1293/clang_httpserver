@@ -115,7 +115,6 @@ bindしたソケットに対してlistenで接続を待つ。第2引数は接続
 listen(rsock, 5);
 ```
 ### `int listen(int sockfd, int backlog)`
-解説
 `sockfd` が参照するソケットを接続待ちソケットそして印をつける。接続待ちソケットとは、`accept()`を使って到着した接続要求を受け付けるのに使用されるソケットである。<br>
 接続要求を受け付ける意思と接続要求を入れるキュー長を指定する。
 - sockfd:
@@ -134,6 +133,15 @@ struct sockaddr_in client;
 len = sizeof(client);
 wsock = accept(rsock, (struct sockaddr *)&client, &len);
 ```
+### `int accept(int sockfd, struct sockaddr *address, socklen_t *address_len)`
+接続指向のソケット型 (SOCK_STREAM, SOCK_SEQPACKET) で用いられる。 この関数は、接続待ちソケット宛ての保留状態の接続要求が入っているキューから先頭の接続要求を取り出し、接続済みソケットを新規に生成し、そのソケットを参照する新しいファイルディスクリプターを返す。新規に生成されたソケットは、接続待ち (listen) 状態ではない。 もともとのソケット sockfd はこの呼び出しによって影響を受けない。 <br>
+ `accept()`を実行すると、クライアント側からの通信接続要求が来るまでプログラムが停止し、接続要求があると、`accept()`直後から再開する。つまり、通信接続要求 が来ると`accept()`が終了し、次の処理に移ることができるようになる。 
+- sockfd:
+    -  `socket`によって生成され、`bind`によってローカルアドレスにバインドされ、`listen`を経て接続を待っているソケットを参照するファイルディスクリプタ。
+- address:
+    - sockaddr構造体へのポインタ。接続相手のソケットのアドレスが入る。
+- address_len:
+    - addressが示す構造体のサイズで初期化しておく必要がある。返ってくる際には、接続相手のアドレスの実際の大きさが格納される。
 
 ## 5. データを書き込む
 acceptで受け取ったソケットに対してデータを書き込む。今回はどんな接続に対しても「HTTP1.1 200 OK」を返す。
