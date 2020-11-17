@@ -149,7 +149,14 @@ acceptで受け取ったソケットに対してデータを書き込む。今�
 ```c
 write(wsock, "HTTP1.1 200 OK", 14);
 ```
-
+### ssize_t write(int fd, const void *buf, size_t count)
+説明
+- fd:
+    - 説明
+- buf:
+    - 説明
+- count:
+    - 説明
 # 動作確認
 ## コンパイル、httpサーバ起動
 ```c
