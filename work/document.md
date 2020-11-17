@@ -149,7 +149,7 @@ acceptで受け取ったソケットに対してデータを書き込む。今�
 ```c
 write(wsock, "HTTP1.1 200 OK", 14);
 ```
-### ssize_t write(int fd, const void *buf, size_t count)
+### `ssize_t write(int fd, const void *buf, size_t count)`
 `buf`が指すバッファーから、ファイルディスクリプター`fd`が参照するファイルまたはソケットへ、最大`count`バイトを書き込む。成功した場合、書き込まれたバイト数が返される(ゼロは何も書き込まれなかったことを示す)。エラーならば -1 が返され、errno が適切に設定される。
 - fd:
     - ファイルまたはソケットの記述子。
