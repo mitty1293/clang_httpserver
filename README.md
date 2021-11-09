@@ -1,4 +1,4 @@
-# httpserver
+# clang_httpserver
 
 httpサーバの実装練習用 on C言語
 
